@@ -1,18 +1,19 @@
-FROM openjdk:8-jre-alpine
+FROM adoptopenjdk:8u242-b08-jre-hotspot-bionic
 
-MAINTAINER Oliver Thomsen <oliver@die-thomsens.de>
+MAINTAINER Nikita Konev <nikit.cpp@yandex.ru>
 
-ARG H2_VERSION
-
-RUN apk add --no-cache curl
-
-ENV DOWNLOAD http://central.maven.org/maven2/com/h2database/h2/${H2_VERSION}/h2-${H2_VERSION}.jar
-
-RUN curl ${DOWNLOAD} -o h2.jar
-
-WORKDIR /
-ENTRYPOINT java $JAVA_OPTS -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1 -jar h2.jar -web -webAllowOthers -tcp -tcpAllowOthers -baseDir /h2-data
+ARG H2_VERSION=1.4.200
 
 EXPOSE 8082 9092
 
-VOLUME /h2-data
+ENV H2DATA /h2-data
+VOLUME $H2DATA
+
+WORKDIR /
+
+COPY docker-entrypoint.sh /usr/local/bin/
+ENTRYPOINT ["docker-entrypoint.sh"]
+
+ENV DOWNLOAD https://repo1.maven.org/maven2/com/h2database/h2/${H2_VERSION}/h2-${H2_VERSION}.jar
+ENV H2_JAR /h2.jar
+RUN curl ${DOWNLOAD} -Sso $H2_JAR
