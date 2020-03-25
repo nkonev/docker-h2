@@ -79,5 +79,5 @@ EOF
 docker run -p 18082:8082 -e JAVA_OPTS=-verbose:gc -v /tmp/h2.sql:/docker-entrypoint-initdb.d/customerdb.sql nkonev/h2:1.4.200
 ```
 
-![connect](.markdown/connect.png)
-![select](.markdown/select.png)
+![connect](https://raw.githubusercontent.com/nkonev/docker-h2/master/.markdown/connect.png)
+![select](https://raw.githubusercontent.com/nkonev/docker-h2/master/.markdown/select.png)
